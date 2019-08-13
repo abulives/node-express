@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var jwt = require('express-jwt');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://abus:thattayil@cluster0-2pq2d.mongodb.net/test?retryWrites=true&w=majority', {useCreateIndex: true,useNewUrlParser: true});
@@ -34,18 +33,6 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-/*app.use(jwt({
-  secret: 'palarivattamsasi',
-  credentialsRequired: false,
-  getToken: function fromHeaderOrQuerystring (req) {
-    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-        return req.headers.authorization.split(' ')[1];
-    } else if (req.query && req.query.token) {
-      return req.query.token;
-    }
-    return null;
-  }
-}).unless({path: ['/signup', 'signin']}));*/
 app.use('/api/v1/users', usersRouter);
 app.all('/*', function(req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));

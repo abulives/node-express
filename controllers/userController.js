@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 var User = require('../models/users.js');
 
 var UserController = {
@@ -6,7 +5,7 @@ var UserController = {
 		var user = new User(req.body);
 		user.save(function(err, users){
 			if(err){
-				return res.send(err);
+				return res.send(404, err);
 			}else{
 				return res.send(users);
 			}
@@ -22,7 +21,6 @@ var UserController = {
 				return res.send(404, {"error":"user doesn't exit"});
 			}else{
 				var token = {};
-				//var token = jwt.sign(data, 'palarivattamsasi');
 				return res.send(data[0]);
 			}
 		});
