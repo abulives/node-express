@@ -4,7 +4,7 @@ var UserController = require('../controllers/userController.js');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send({name:"Lucifer"});
+  res.send({name:"index"});
 });
 router.post('/signup', UserController.signUp);
 router.post('/signin', UserController.login);

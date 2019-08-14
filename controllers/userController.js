@@ -12,10 +12,9 @@ var UserController = {
 		});
 	},
 	login: function(req, res){
-		console.log("data", req.body);
 		var filter = {};
-		filter.password = req.body.password;
-		filter["$or"] = [{"username":req.body.username}, {"email":req.body.email}];
+		filter.username = req.body.username;
+		//filter.password = req.body.password;
 		User.find(filter, function(err, data){
 			if(err || data.length==0){
 				return res.send(404, {"error":"user doesn't exit"});
@@ -35,7 +34,6 @@ var UserController = {
 		});
 	},
 	deleteUser: function(req,res){
-		console.log("id", req.params.id, req.query.id);
 		User.remove({_id:req.params.id}, function(err){
 			if(err){
 				return res.send(404, err);
