@@ -13,8 +13,8 @@ var UserController = {
 	},
 	login: function(req, res){
 		var filter = {};
-		filter.username = req.body.username;
-		//filter.password = req.body.password;
+		filter["$or"] = [{ "username": req.body.username }, { "email": req.body.username }];
+		filter.password = req.body.password;
 		User.find(filter, function(err, data){
 			if(err || data.length==0){
 				return res.send(404, {"error":"user doesn't exit"});
