@@ -5,7 +5,7 @@ var UserController = {
 		var user = new User(req.body);
 		user.save(function(err, users){
 			if(err){
-				return res.send(404, err);
+				return res.status(500).send(err);
 			}else{
 				return res.send(users);
 			}
@@ -17,7 +17,7 @@ var UserController = {
 		filter.password = req.body.password;
 		User.find(filter, function(err, data){
 			if(err || data.length==0){
-				return res.send(404, {"error":"user doesn't exit"});
+				return res.status(500).send({"error":"user doesn't exit"});
 			}else{
 				var token = {};
 				return res.send(data[0]);
@@ -27,7 +27,7 @@ var UserController = {
 	getUser: function(req,res){
 		User.find({}, function(err, data){
 			if(err){
-				return res.send(404, err);
+				return res.status(500).send(err);
 			}else{
 				return res.send(data);
 			}
@@ -36,7 +36,7 @@ var UserController = {
 	deleteUser: function(req,res){
 		User.remove({_id:req.params.id}, function(err){
 			if(err){
-				return res.send(404, err);
+				return res.status(500).send(err);
 			}else{
 				return res.send({"data":"removed succesfully"});
 			}

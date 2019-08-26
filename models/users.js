@@ -4,7 +4,7 @@ var UserModel = function(){
 	var UserSchema = mongoose.Schema({
 	  username: {type: String,required:true,unique:true},
 	  email: {type: String,required:true,unique:true},
-	  password : String,
+	  password : {type: String,required:true},
 	  user_type: {type:Number, default:0},
 	  date: {type: Date,default: Date.now}
 	});
