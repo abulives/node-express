@@ -4,7 +4,7 @@ var ProductModel = function(){
 	var productSchema = mongoose.Schema({
 	  name: {type: String,required:true},
 	  quantity: {type: String},
-	  price : {type: String},
+	  price : {type: Number},
       description: {type:String},      
 	  image: {type:String},
 	  date: {type: Date,default: Date.now}

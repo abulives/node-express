@@ -7,4 +7,10 @@ router.get('/', function(req, res, next) {
 });
 router.post('/product', ProductController.addProduct);
 router.get('/product', ProductController.getProduct);
+router.post('/cart', ProductController.addCart);
+router.post('/mycart', ProductController.getMyCart);
+router.delete('/mycart/:id', ProductController.removeMyCart);
+router.get('/mycartcount', ProductController.getMyCartCount);
+router.post('/address', ProductController.addAddress);
+router.get('/address', ProductController.getAddress);
 module.exports = router;

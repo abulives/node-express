@@ -1,13 +1,14 @@
 var Product = require('../models/products.js');
-
+var Cart = require('../models/cart.js');
+var Address = require('../models/address.js');
 var UserController = {
 	addProduct: function(req, res){
-		var user = new Product(req.body);
-		user.save(function(err, users){
+		var product = new Product(req.body);
+		product.save(function(err, data){
 			if(err){
 				return res.status(500).send(err);
 			}else{
-				return res.send(users);
+				return res.send(data._id);
 			}
 		});
 	},
@@ -33,6 +34,103 @@ var UserController = {
 				return res.send({"data":"removed succesfully"});
 			}
 		});
-	}
+	},
+	addCart: function(req, res){
+		if(req.body._id){
+			req.body.productid=req.body._id;
+			delete req.body._id;
+		}
+		var cart = new Cart(req.body);
+		cart.save(function(err, data){
+			if(err){
+				return res.status(500).send(err);
+			}else{
+				return res.send(data._id);
+			}
+		});
+	},
+	getMyCart: function(req,res){
+        var filter ={};
+        var obj = req.body;
+	    Object.keys(obj).forEach(function(key) {
+	        filter[key] = obj[key];
+		});
+		Cart.aggregate([
+			{$match:filter},
+			{$group:
+				{
+					_id:{'productid':'$productid', 'user_id':'$user_id'},
+					quantity: {$sum:1},
+					price: { $sum: '$price' },
+					name: {$first:'$name'},
+					description: {$first:'$description'},
+					image: {$first:'$image'},
+					productid:{$first:'$productid'},
+					id:{$first:'$_id'}
+				} 
+			}
+		]).exec(function(err, data){
+			if(err){
+				return res.status(500).send(err);
+			}else{
+				return res.send(data);
+			}
+		});
+	},
+	getMyCartCount: function(req,res){
+		var filter ={};
+        var obj = req.query;
+	    Object.keys(obj).forEach(function(key) {
+	        filter[key] = obj[key];
+		});
+		Cart.aggregate([
+			{$match:filter},
+			{$group:
+				{
+					_id:{'user_id':'$user_id'},
+					quantity: {$sum:1}
+				} 
+			}
+		]).exec(function(err, data){
+			if(err){
+				return res.status(500).send(err);
+			}else{
+				return res.send(data);
+			}
+		});
+	},
+	removeMyCart:function(req,res){
+		Cart.remove({_id:req.params.id}, function(err, data){
+			if(err){
+				return res.status(500).send(err);
+			}else{
+				return res.send(data);
+			}
+		});
+	},
+	addAddress: function(req, res){
+		Address.findOneAndUpdate({user_id:req.body.user_id}, {$set:req.body}, {upsert:true},function(err, data){
+			if(err){
+				return res.status(500).send(err);
+			}else{
+				return res.send(data);
+			}
+		});
+	},
+	getAddress: function(req,res){
+        var filter ={};
+        var obj = req.body;
+	    Object.keys(obj).forEach(function(key) {
+	        filter[key] = new RegExp('.*' + obj[key] + '.*', 'i');
+	    });
+		Address.find(filter, function(err, data){
+			if(err){
+				return res.status(500).send(err);
+			}else{
+				return res.send(data);
+			}
+		});
+	},
 };
+
 module.exports = UserController;
