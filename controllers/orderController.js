@@ -18,29 +18,21 @@ var OrderController = {
             if(err || data.length==0){
                 return res.status(500).send({errmsg:"something went wrong"})
             }else{
-                req.params.order=data;
+                data.forEach(function(item){
+                    delete item._id;
+                });
+                req.body.items=data;
                 return next();
             }
         });
     },
     saveOrder:function(req, res,next){
-        async.forEachOf(req.params.order, (value, key, callback) => {            
-            var obj = req.body;
-            obj.productid = value.productid;
-            obj.quantity = value.quantity;
-            var order = new Order(obj);
-            order.save(function(err, users){
-                if(err){
-                   return callback(err);
-                }else{
-                    callback();
-                }
-            });
-        }, (err,result) => {
-            if (err) {
-                return res.status(500).send(err);
+        var order = new Order(req.body);
+        order.save(function(err){
+            if(err){
+                return res.status(500).send(err)
             }else{
-                return next();
+                return next()
             }
         });
     },
@@ -50,6 +42,39 @@ var OrderController = {
                 return res.status(500).send(err);
             }else{
                 return res.send({msg:"order placed successfully"})
+            }
+        })
+    },
+    myOrder:function(req, res){
+        var filter ={};
+        var obj = req.body;
+	    Object.keys(obj).forEach(function(key) {
+	        filter[key] = obj[key];
+        });
+        Order.find(filter).populate('items.productid').sort({created_on:-1}).exec(function (err, orders) {
+            if(err){
+                return res.status(500).send(err)
+            }else{
+                return res.send(orders);
+            }
+        });
+    },
+    allOrder:function(req, res){
+        Order.find({}).populate('items.productid').sort({created_on:-1}).exec(function (err, orders) {
+            if(err){
+                return res.status(500).send(err)
+            }else{
+                return res.send(orders);
+            }
+        });
+    },
+    updateOrder:function(req, res){
+        Order.update({'items._id':req.body.id}, {$set:{'items.status':req.body.status}})
+        .exec(function(err, data){
+            if(err){
+                return res.status(500).send(err)
+            }else{
+                return res.send(data);
             }
         })
     }
