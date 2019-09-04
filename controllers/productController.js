@@ -62,11 +62,11 @@ var UserController = {
 					_id:{'productid':'$productid', 'user_id':'$user_id'},
 					quantity: {$sum:1},
 					price: { $sum: '$price' },
-					name: {$first:'$name'},
-					description: {$first:'$description'},
-					image: {$first:'$image'},
-					productid:{$first:'$productid'},
-					id:{$first:'$_id'}
+					name: {$last:'$name'},
+					description: {$last:'$description'},
+					image: {$last:'$image'},
+					productid:{$last:'$productid'},
+					id:{$last:'$_id'}
 				} 
 			}
 		]).exec(function(err, data){

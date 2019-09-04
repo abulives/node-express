@@ -5,7 +5,8 @@ var addressModel = function(){
 	  user_id: {type:String,required:true},
 	  name:{type:String},
 	  address: {type: String},   
-	  pincode: {type:String}
+	  pincode: {type:String},
+	  phone: {type:Number}
 	});
 	
 	return mongoose.model('address', addressSchema);

@@ -14,6 +14,7 @@ db.once('open', function() {
 
 var usersRouter = require('./routes/users');
 var poductsRouter = require('./routes/products');
+var ordersRouter = require('./routes/orders');
 var app = express();
 
 
@@ -35,6 +36,7 @@ app.use(function(req, res, next) {
 });
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/products', poductsRouter);
+app.use('/api/v1/orders', ordersRouter);
 app.all('/*', function(req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
