@@ -12,11 +12,11 @@ resource "restapi_object" "Mso_object" {
 }
 resource "restapi_object" "Locality_object" {
   path = "/ott.cognizant.com/fake/locality"
-  data = "{ \"id\": \"2\", \"name\": \"California\"}"
+  data = "{ \"id\": \"2\", \"name\": \"Newyork\"}"
 }
 resource "restapi_object" "Channel_object" {
   path = "/ott.cognizant.com/fake/channel"
-  data = "{ \"id\":  \"${var.chn_ref_id}\", \"name\": \"Stsr Sports\"}"
+  data = "{ \"id\":  \"${var.chn_ref_id}\", \"name\": \"ten Sports\"}"
 }
 resource "restapi_object" "Mso_locality_object" {
   path = "/ott.cognizant.com/fake/mso_locality"
