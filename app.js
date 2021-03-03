@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://abus:thattayil@cluster0-2pq2d.mongodb.net/test?retryWrites=true&w=majority', {useCreateIndex: true,useNewUrlParser: true});
+mongoose.connect('mongodb+srv://username:password@cluster0-2pq2d.mongodb.net/test?retryWrites=true&w=majority', {useCreateIndex: true,useNewUrlParser: true});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
