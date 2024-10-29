@@ -1,46 +1,52 @@
-var User = require('../models/users.js');
+const User = require('../models/users.js');
 
-var UserController = {
-	signUp: function(req, res){
-		var user = new User(req.body);
-		user.save(function(err, users){
-			if(err){
-				return res.status(500).send(err);
-			}else{
-				return res.send(users);
-			}
-		});
-	},
-	login: function(req, res){
-		var filter = {};
-		filter["$or"] = [{ "username": req.body.username }, { "email": req.body.username }];
-		filter.password = req.body.password;
-		User.find(filter, function(err, data){
-			if(err || data.length==0){
-				return res.status(500).send({"error":"user doesn't exit"});
-			}else{
-				var token = {};
-				return res.send(data[0]);
-			}
-		});
-	},
-	getUser: function(req,res){
-		User.find({}, function(err, data){
-			if(err){
-				return res.status(500).send(err);
-			}else{
-				return res.send(data);
-			}
-		});
-	},
-	deleteUser: function(req,res){
-		User.remove({_id:req.params.id}, function(err){
-			if(err){
-				return res.status(500).send(err);
-			}else{
-				return res.send({"data":"removed succesfully"});
-			}
-		});
-	}
+const UserController = {
+    signUp: async function(req, res) {
+        try {
+            const user = new User(req.body);
+            const users = await user.save();
+            return res.send(users);
+        } catch (err) {
+            return res.status(500).send(err);
+        }
+    },
+
+    login: async function(req, res) {
+        try {
+            const filter = {
+                $or: [{ username: req.body.username }, { email: req.body.username }],
+                password: req.body.password
+            };
+            const data = await User.find(filter);
+
+            if (data.length === 0) {
+                return res.status(404).send({ error: "User doesn't exist" });
+            }
+
+            // Token generation logic can go here
+            return res.send(data[0]);
+        } catch (err) {
+            return res.status(500).send({ error: "An error occurred during login" });
+        }
+    },
+
+    getUser: async function(req, res) {
+        try {
+            const data = await User.find({});
+            return res.send(data);
+        } catch (err) {
+            return res.status(500).send(err);
+        }
+    },
+
+    deleteUser: async function(req, res) {
+        try {
+            await User.deleteOne({ _id: req.params.id });
+            return res.send({ data: "Removed successfully" });
+        } catch (err) {
+            return res.status(500).send(err);
+        }
+    }
 };
+
 module.exports = UserController;

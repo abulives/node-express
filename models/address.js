@@ -1,15 +1,13 @@
 const mongoose = require('mongoose');
 
-var addressModel = function(){ 
-	var addressSchema = mongoose.Schema({
-	  user_id: {type:String,required:true},
-	  name:{type:String},
-	  address: {type: String},   
-	  pincode: {type:String},
-	  phone: {type:Number}
-	});
-	
-	return mongoose.model('address', addressSchema);
-};
+// Define the address schema
+const addressSchema = new mongoose.Schema({
+    user_id: { type: String, required: true },
+    name: { type: String },
+    address: { type: String },
+    pincode: { type: String },
+    phone: { type: Number }
+});
 
-module.exports = new addressModel();
+// Export the model directly
+module.exports = mongoose.model('Address', addressSchema);

@@ -3,14 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://username:password@cluster0-2pq2d.mongodb.net/test?retryWrites=true&w=majority', {useUnifiedTopology: true});
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("db connected");
-});
+
+mongoose.connect('mongodb+srv://username:password@mongodb.net/test?retryWrites=true&w=majority')
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
 
 var usersRouter = require('./routes/users');
 var poductsRouter = require('./routes/products');
@@ -45,14 +43,13 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+// Error-handling middleware
+app.use((error, req, res, next) => {
+  // Set the error status code, or default to 500
+  res.status(error.status || 500);
+  return res.json({
+    success: false,
+    message: error.message || 'Internal Server Error',
+  });
 });
 module.exports = app;
